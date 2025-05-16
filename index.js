@@ -3,7 +3,9 @@ const cors = require("cors");
 const axios = require("axios");
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: "https://gorgeous-salmiakki-6699db.netlify.app"
+}));
 app.use(express.json());
 
 app.post("/api/instagram", async (req, res) => {
