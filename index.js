@@ -1,16 +1,14 @@
-const express = require("express");
-const cors = require("cors");
-const axios = require("axios");
-const PORT = process.env.PORT || 3000;
+const express = require('express');
+const cors = require('cors');
+const axios = require('axios');
 
 const app = express();
-app.use(cors({
-  origin: "https://gorgeous-salmiakki-6699db.netlify.app"
-}));
+app.use(cors());
 app.use(express.json());
 
 app.post("/api/instagram", async (req, res) => {
   const { url } = req.body;
+
   try {
     const response = await axios.post(
       "https://fastdl.app/api/ajaxSearch",
@@ -18,17 +16,20 @@ app.post("/api/instagram", async (req, res) => {
       {
         headers: {
           "content-type": "application/x-www-form-urlencoded",
-          "x-requested-with": "XMLHttpRequest",
-        },
+          "x-requested-with": "XMLHttpRequest"
+        }
       }
     );
-    const video = response.data.data.medias[0]?.url;
+
+    const video = response.data.data[0]?.links?.[0]?.url;
     res.json({ video });
-  } catch (err) {
-    res.status(500).json({ error: "Download failed" });
+  } catch (error) {
+    res.status(500).json({ error: "Failed to fetch video." });
   }
 });
 
+// Use Render's assigned port
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
